@@ -29,6 +29,9 @@ def make_db_options_group(parser, defaults={}):
     ret.add_option('-c', '--classes-uri', dest='classes_uri',
                    default=defaults.get('classes_uri', OPT_CLASSES_URI),
                    help='the URI to the classes storage [%default]')
+    ret.add_option('-e', '--file-extension', dest='file_extension',
+                   default=defaults.get('file_extension', OPT_FILE_EXTENSION),
+                   help='the file extension of the reclass files to look for [%default]')
     return ret
 
 

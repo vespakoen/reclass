@@ -28,7 +28,8 @@ def cli():
         defaults = {'inventory_base_uri': ansible_dir,
                     'pretty_print' : True,
                     'output' : 'json',
-                    'applications_postfix': '_hosts'
+                    'applications_postfix': '_hosts',
+                    'file_extension': OPT_ANSIBLE_FILE_EXTENSION
                    }
         defaults.update(find_and_read_configfile())
 
@@ -57,8 +58,8 @@ def cli():
         if options.mode == MODE_NODEINFO:
             data = get_nodeinfo(options.storage_type,
                                 options.inventory_base_uri, options.nodes_uri,
-                                options.classes_uri, options.hostname,
-                                class_mappings)
+                                options.classes_uri, options.file_extension,
+                                options.hostname, class_mappings)
             # Massage and shift the data like Ansible wants it
             data['parameters']['__reclass__'] = data['__reclass__']
             for i in ('classes', 'applications'):
@@ -69,6 +70,7 @@ def cli():
             data = get_inventory(options.storage_type,
                                  options.inventory_base_uri,
                                  options.nodes_uri, options.classes_uri,
+                                 options.file_extension,
                                  class_mappings)
             # Ansible inventory is only the list of groups. Groups are the set
             # of classes plus the set of applications with the postfix added:

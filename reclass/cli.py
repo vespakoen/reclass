@@ -28,13 +28,13 @@ def main():
         if options.mode == MODE_NODEINFO:
             data = get_nodeinfo(options.storage_type,
                                 options.inventory_base_uri, options.nodes_uri,
-                                options.classes_uri, options.nodename,
-                                class_mappings)
+                                options.classes_uri, options.file_extension,
+                                options.nodename, class_mappings)
         else:
             data = get_inventory(options.storage_type,
                                  options.inventory_base_uri,
                                  options.nodes_uri, options.classes_uri,
-                                 class_mappings)
+                                 options.file_extension, class_mappings)
 
         print output(data, options.output, options.pretty_print)
 

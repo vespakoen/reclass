@@ -14,16 +14,14 @@ from directory import Directory
 from reclass.datatypes import Entity
 import reclass.errors
 
-FILE_EXTENSION = '.yml'
-
 def vvv(msg):
     #print >>sys.stderr, msg
     pass
 
 class ExternalNodeStorage(NodeStorageBase):
 
-    def __init__(self, nodes_uri, classes_uri, class_mappings):
-        super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri,
+    def __init__(self, nodes_uri, classes_uri, file_extension, class_mappings):
+        super(ExternalNodeStorage, self).__init__(nodes_uri, classes_uri, file_extension,
                                                   class_mappings)
 
         def _handle_node_duplicates(name, uri1, uri2):
@@ -39,7 +37,7 @@ class ExternalNodeStorage(NodeStorageBase):
     def _enumerate_inventory(self, basedir, duplicate_handler=None):
         ret = {}
         def register_fn(dirpath, filenames):
-            filenames = fnmatch.filter(filenames, '*{0}'.format(FILE_EXTENSION))
+            filenames = fnmatch.filter(filenames, '*{0}'.format(self._file_extension))
             vvv('REGISTER {0} in path {1}'.format(filenames, dirpath))
             for f in filenames:
                 name = os.path.splitext(f)[0]

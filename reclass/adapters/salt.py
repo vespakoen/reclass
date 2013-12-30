@@ -15,16 +15,18 @@ from reclass.config import find_and_read_configfile, get_options
 from reclass.constants import MODE_NODEINFO
 from reclass.defaults import *
 from reclass.version import *
+import pprint
 
 def ext_pillar(minion_id, pillar,
                storage_type=OPT_STORAGE_TYPE,
                inventory_base_uri=OPT_INVENTORY_BASE_URI,
                nodes_uri=OPT_NODES_URI,
                classes_uri=OPT_CLASSES_URI,
+               file_extension=OPT_SALT_FILE_EXTENSION,
                class_mappings=None):
 
     data = get_nodeinfo(storage_type, inventory_base_uri, nodes_uri,
-                        classes_uri, minion_id, class_mappings)
+                        classes_uri, file_extension, minion_id, class_mappings)
     params = data.get('parameters', {})
     params['__reclass__'] = {}
     params['__reclass__']['applications'] = data['applications']
@@ -34,7 +36,7 @@ def ext_pillar(minion_id, pillar,
 
 def top(minion_id, storage_type=OPT_STORAGE_TYPE,
         inventory_base_uri=OPT_INVENTORY_BASE_URI, nodes_uri=OPT_NODES_URI,
-        classes_uri=OPT_CLASSES_URI,
+        classes_uri=OPT_CLASSES_URI, file_extension=OPT_SALT_FILE_EXTENSION,
         class_mappings=None):
 
     env = 'base'
@@ -45,13 +47,13 @@ def top(minion_id, storage_type=OPT_STORAGE_TYPE,
     # CLI invocations of the adapter):
     if minion_id is not None:
         data = get_nodeinfo(storage_type, inventory_base_uri, nodes_uri,
-                            classes_uri, minion_id, class_mappings)
+                            classes_uri, file_extension, minion_id, class_mappings)
         applications = data.get('applications', [])
         return {env: applications}
 
     else:
         data = get_inventory(storage_type, inventory_base_uri, nodes_uri,
-                             classes_uri, class_mappings)
+                             classes_uri, file_extension, class_mappings)
         nodes = {}
         for node_id, node_data in data['nodes'].iteritems():
             nodes[node_id] = node_data['applications']
@@ -64,7 +66,8 @@ def cli():
         inventory_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
         defaults = {'pretty_print' : True,
                     'output' : 'yaml',
-                    'inventory_base_uri': inventory_dir
+                    'inventory_base_uri': inventory_dir,
+                    'file_extension': OPT_SALT_FILE_EXTENSION
                    }
         defaults.update(find_and_read_configfile())
         options = get_options(RECLASS_NAME, VERSION, DESCRIPTION,
@@ -84,6 +87,7 @@ def cli():
                               inventory_base_uri=options.inventory_base_uri,
                               nodes_uri=options.nodes_uri,
                               classes_uri=options.classes_uri,
+                              file_extension=options.file_extension,
                               class_mappings=class_mappings)
         else:
             data = top(minion_id=None,
@@ -91,6 +95,7 @@ def cli():
                        inventory_base_uri=options.inventory_base_uri,
                        nodes_uri=options.nodes_uri,
                        classes_uri=options.classes_uri,
+                       file_extension=options.file_extension,
                        class_mappings=class_mappings)
 
         print output(data, options.output, options.pretty_print)

@@ -25,14 +25,16 @@ def vvv(msg):
 
 class NodeStorageBase(object):
 
-    def __init__(self, nodes_uri, classes_uri, class_mappings):
+    def __init__(self, nodes_uri, classes_uri, file_extension, class_mappings):
         self._nodes_uri = nodes_uri
         self._classes_uri = classes_uri
+        self._file_extension = file_extension
         self._classes_cache = {}
         self._class_mappings = class_mappings
 
     nodes_uri = property(lambda self: self._nodes_uri)
     classes_uri = property(lambda self: self._classes_uri)
+    file_extension = property(lambda self: self._file_extension)
     class_mappings = property(lambda self: self._class_mappings)
 
     def _match_regexp(self, key, nodename):

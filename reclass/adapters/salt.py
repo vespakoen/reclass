@@ -15,7 +15,6 @@ from reclass.config import find_and_read_configfile, get_options
 from reclass.constants import MODE_NODEINFO
 from reclass.defaults import *
 from reclass.version import *
-import pprint
 
 def ext_pillar(minion_id, pillar,
                storage_type=OPT_STORAGE_TYPE,
